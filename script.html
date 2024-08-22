@@ -1,0 +1,155 @@
+const container = document.querySelector(".container");
+
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        dashboard(user);
+    } else {
+        landing();
+    }
+});
+
+const landing = () => {
+    const elementUID = document.createElement("div");
+    elementUID.classList.add("user-id");
+    elementUID.setAttribute("data-firebase", "uid");
+    elementUID.innerHTML = (`Selamat Datang di Aplikasi DPD Pertuni Jambi! Silakan klik Tombol Masuk Sekarang`);
+
+    const elementButton = document.createElement("button");
+    elementButton.classList.add("login");
+    elementButton.setAttribute("data-button", "login-btn");
+    elementButton.innerHTML = (`Masuk Sekarang`);
+
+    elementButton.onclick = () => {
+        firebase.auth().signInAnonymously()
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+    container.innerHTML = ``;
+    container.appendChild(elementUID);
+    container.appendChild(elementButton);
+}
+
+const dashboard = (user) => {
+    const elementUID = document.createElement("div");
+    elementUID.classList.add("Dashboard");
+    elementUID.innerHTML = (`
+    <head>
+        <style>
+            /* Global styling */
+            body {
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 14px; /* Set ukuran teks menjadi 14 */
+                line-height: 1.6;
+                background-color: #f4f4f4;
+                padding: 20px;
+                margin: 0; /* Reset margin to ensure full width */
+                display: flex;
+                flex-direction: column;
+                align-items: center; /* Center content horizontally */
+            }
+    
+            /* Styling for h1 */
+            h1 {
+                font-weight: bold; /* Membuat teks h1 menjadi tebal (bold) */
+                color: white; /* Warna teks putih */
+                background-color: black; /* Warna latar belakang hitam */
+                padding: 10px; /* Tambahkan padding agar teks tidak terlalu dekat dengan latar belakang */
+            }
+    
+            /* Styling for the menu items */
+            nav ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+                flex-direction: column;
+            }
+    
+            nav li {
+                float: left;
+            }
+    
+            nav button {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+                width: 100%;
+            }
+    
+            /* Styling for the active menu item */
+            .active {
+                background-color: blue;
+            }
+    
+            /* Container styling */
+            .container {
+                max-width: 800px;
+                margin: auto;
+                background: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                overflow-y: scroll; /* Allow vertical scroll */
+                flex: 1; /* Grow container to fill remaining space */
+            }
+    
+            /* Responsive image */
+            .img-center {
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 20px; /* Add some space below the image */
+            }
+        </style>
+    </head>
+    <body>
+        <img class="img-center" src="pertuni.jpg" alt="Logo Pertuni"> <!-- Remove width attribute to allow automatic resizing -->
+        <header>
+            <h1>Menu DPD Pertuni Jambi</h1>
+            <nav>        
+                <a href="https://forms.gle/q9XrhEnFWae5a7Yk9" target="_blank"</a>Form Pendaftaran</a>                     
+                <button onclick="window.location.href='admin anggota.html'">Menu Anggota</button>                                                
+                        <button id="tentangkami" onclick="window.location.href='sosialtatatertib.html'">Tentang Kami</button>               
+                <button id="tentangkami" onclick="window.location.href='perpustakaan.html'">Perpustakaan</button>
+            </nav>
+            <script>
+                // get all menu buttons
+                var menuButtons = document.querySelectorAll('nav button');
+
+                // add click event listener to each menu button
+                for (var i = 0; i < menuButtons.length; i++) {
+                    menuButtons[i].addEventListener('click', function () {
+                        // remove active class from all menu buttons
+                        for (var j = 0; j < menuButtons.length; j++) {
+                            menuButtons[j].classList.remove('active');
+                        }
+
+                        // add active class to the clicked menu button
+                        this.classList.add('active');
+                    });
+                }
+            </script>
+        </body>
+    `);
+
+    const elementButton = document.createElement("button");
+    elementButton.classList.add("login");
+    elementButton.setAttribute("data-button", "logout-btn");
+    elementButton.innerHTML = (`Keluar Dari Akun`);
+    elementButton.onclick = () => {
+        firebase.auth().signOut();
+    }
+    
+    container.innerHTML = ``;
+    container.appendChild(elementUID);
+    container.appendChild(elementButton);
+}
